@@ -1,11 +1,16 @@
 # Playwright Java Demo
 
-基于 Java + Maven + Playwright 的简单示例工程，用来体验和验证 Playwright 的功能。
+[![Java](https://img.shields.io/badge/Java-21-orange)](https://adoptium.net/)
+[![Maven](https://img.shields.io/badge/Maven-3.x-blue)](https://maven.apache.org/)
+[![Playwright](https://img.shields.io/badge/Playwright-Java-green)](https://playwright.dev/java/)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey)](LICENSE)
+
+基于 **Java 21 + Maven + Playwright for Java** 的简单示例工程，用来体验和验证 Playwright 的功能。
 
 ## 技术栈
 
 - **语言**：Java 21
-- **构建工具**：Maven
+- **构建工具**：Maven 3.x
 - **测试框架**：JUnit 5
 - **浏览器自动化**：Playwright for Java
 
