@@ -1,0 +1,17 @@
+target/
+.idea/
+.vscode/
+*.iml
+
+# Logs
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Playwright temp
+playwright-report/
+test-results/
+screenshots
