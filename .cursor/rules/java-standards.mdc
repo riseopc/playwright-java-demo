@@ -1,0 +1,35 @@
+---
+description: Java 开发规范（playwright-java-demo 项目）
+globs: src/**/*.java
+alwaysApply: false
+---
+
+# Java 开发规范
+
+- **JDK 版本**
+  - 项目统一使用 Java 21（以 `pom.xml` 中 `maven.compiler.source/target` 为准）。
+  - 不要在同一项目中混用其他 JDK 语法特性。
+
+- **包名与目录结构**
+  - 根包统一为 `cn.riseopc.playwright`。
+  - 业务代码放在 `src/main/java/cn/riseopc/playwright/**`。
+  - 测试代码放在 `src/test/java/cn/riseopc/playwright/**`。
+
+- **命名约定**
+  - 类名使用大驼峰，例如：`ScreenshotService`、`ScreenshotController`。
+  - 非常量字段、变量使用小驼峰，例如：`screenshotPath`、`playwright`。
+  - 常量使用全大写 + 下划线，例如：`DEFAULT_TIMEOUT_MS`。
+
+- **测试类**
+  - 测试类命名以 `*Test` 结尾，例如：`PlaywrightDemoTest`。
+  - 每个测试方法使用 `@Test` 注解，并使用有意义的英文/拼音命名。
+
+- **异常处理**
+  - 避免在非测试代码中直接 `e.printStackTrace()`，优先抛出带上下文信息的异常或记录日志。
+  - 与 Playwright 操作相关的异常，统一包装为带 URL / 截图路径等关键信息的 `RuntimeException` 或自定义异常。
+
+- **Lombok 与日志**
+  - 推荐在 Spring 组件（如 Controller、Service）上使用 Lombok 注解简化样板代码，例如：`@Slf4j`、`@RequiredArgsConstructor`。
+  - 禁止字段级别的 `@Autowired` 注入，优先使用构造器注入（可配合 `@RequiredArgsConstructor`）。
+  - 日志使用 `Slf4j` 抽象（`log.info/debug/warn/error`），不要直接用 `System.out.println`。
+

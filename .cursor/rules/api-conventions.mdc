@@ -1,0 +1,33 @@
+---
+description: HTTP API 接口路径与风格约束
+globs: src/main/java/**/web/**/*.java
+alwaysApply: false
+---
+
+# API 接口路径与风格约束
+
+- **基础路径约定**
+  - 所有对外 HTTP 接口统一以 `/api` 作为前缀。
+  - Controller 类上使用 `@RequestMapping("/api")` 或以此为基础扩展路径。
+
+- **命名与分层**
+  - Controller 类放在 `web` 包下，例如：`cn.riseopc.playwright.web.ScreenshotController`。
+  - Service 类放在 `service` 包下，例如：`cn.riseopc.playwright.service.ScreenshotService`。
+  - Controller 只做参数校验与结果封装，具体业务逻辑放在对应 Service 中。
+
+- **截图接口规范**
+  - 统一提供通过 URL 生成截图的接口：
+    - 示例：`GET /api/screenshot?url=...`
+  - 截图文件统一存放在项目根目录下，由 `app.screenshot-dir` 配置控制（默认 `screenshots/`）。
+  - 返回体中应包含：
+    - 原始 URL；
+    - 截图相对路径（如：`screenshots/screenshot_yyyyMMdd_HHmmss_SSS.png`）。
+
+- **参数与错误处理**
+  - 接收 URL 参数时，应至少校验：
+    - 非空；
+    - 基本格式合法（如以 `http://` 或 `https://` 开头）。
+  - 截图失败时，Service 不直接返回 null，统一抛出带上下文信息的异常（包括 URL）。
+  - Controller 应将内部异常转换为合理的 HTTP 状态码和错误信息（例如 400/500），而不是直接把栈信息暴露给客户端。
+  - Controller 建议使用 `Slf4j` 日志记录请求入口与关键步骤（如接收到的 URL、生成的截图路径），日志级别以 `INFO/DEBUG` 为主。
+

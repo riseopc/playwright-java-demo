@@ -1,0 +1,29 @@
+---
+description: Spring Boot 与 Playwright 版本约束
+globs: pom.xml
+alwaysApply: false
+---
+
+# Spring Boot 与 Playwright 版本约束
+
+- **Spring Boot**
+  - 本项目使用 `spring-boot-starter-parent` 管理依赖。
+  - Spring Boot 版本固定为 `3.5.10`，如需升级需评估兼容性并统一修改父 POM 版本。
+  - 默认嵌入式容器统一使用 Undertow（通过 `spring-boot-starter-undertow`，并排除默认 Tomcat）。
+
+- **Playwright for Java**
+  - Playwright 版本通过 `playwright.version` 属性集中管理。
+  - 当前推荐版本：`1.58.0`（以 `pom.xml` 为准）。
+  - 如需升级 Playwright，优先查阅官方变更说明，并同时验证：
+    - 截图相关 API（`Page.screenshot`）是否有变更；
+    - 浏览器安装命令与启动参数是否兼容。
+
+- **JUnit & 测试相关**
+  - JUnit 5 版本通过 `junit.jupiter.version` 管理，当前为 `5.10.2`。
+  - 所有新测试统一使用 JUnit 5（不要再引入 JUnit 4）。
+
+- **通用依赖管理原则**
+  - 所有版本号优先通过 `<properties>` 管理，避免在多个依赖声明中硬编码版本。
+  - 新增依赖前，优先检查是否已经由 Spring Boot BOM 或父 POM 管理版本，避免重复显式指定。
+  - Lombok 等通用依赖优先使用 Spring Boot 管理的版本，仅在确有需要时显式指定版本。
+
