@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: playwright-java-demo
+
+server:
+  port: 8080
+  undertow:
+    threads:
+      io: 4           # IO 线程数，适合轻量 demo
+      worker: 32      # 工作线程数
+    accesslog:
+      enabled: true
+      dir: logs/undertow
+      pattern: common
+
+logging:
+  file:
+    name: logs/app.log
+  level:
+    root: INFO
+    cn.riseopc.playwright: DEBUG
+
+app:
+  screenshot-dir: screenshots
+
