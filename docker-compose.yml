@@ -1,0 +1,23 @@
+services:
+  playwright-java-demo:
+    hostname: playwright-java-demo
+    container_name: playwright-java-demo
+    image: mcr.microsoft.com/playwright/java:v1.58.0-jammy
+    working_dir: /work
+    command: ["bash", "-lc", "mvn -B -ntp test"]
+    shm_size: "1gb"
+    environment:
+      # 避免某些 CI/容器环境下的交互提示
+      CI: "true"
+      # 提高清晰度：更大的视口 + 更高 DPR（可按需改）
+      PW_VIEWPORT_WIDTH: "1920"
+      PW_VIEWPORT_HEIGHT: "1080"
+      PW_DEVICE_SCALE_FACTOR: "2"
+    volumes:
+      # 挂载项目代码
+      - ./:/work
+      # Maven 缓存（加速依赖下载）
+      - m2-cache:/root/.m2
+
+volumes:
+  m2-cache:
