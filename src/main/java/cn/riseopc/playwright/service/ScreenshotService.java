@@ -4,6 +4,8 @@ import com.microsoft.playwright.Browser;
 import com.microsoft.playwright.BrowserType;
 import com.microsoft.playwright.Page;
 import com.microsoft.playwright.Playwright;
+import com.microsoft.playwright.TimeoutError;
+import com.microsoft.playwright.options.WaitUntilState;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -41,8 +43,10 @@ public class ScreenshotService {
                          new BrowserType.LaunchOptions().setHeadless(true))) {
 
                 Page page = browser.newPage();
-                page.navigate(url);
-                page.waitForLoadState();
+                // 放宽超时时间，并仅等待到 DOMContentLoaded，避免某些站点长时间挂起
+                page.navigate(url, new Page.NavigateOptions()
+                        .setWaitUntil(WaitUntilState.DOMCONTENTLOADED)
+                        .setTimeout(60_000));
 
                 page.screenshot(new Page.ScreenshotOptions()
                         .setFullPage(true)
@@ -50,6 +54,8 @@ public class ScreenshotService {
             }
 
             return filePath.toString().replace("\\", "/");
+        } catch (TimeoutError e) {
+            throw new RuntimeException("生成截图超时（可能网络不通或站点访问受限），url=" + url, e);
         } catch (Exception e) {
             throw new RuntimeException("生成截图失败，url=" + url, e);
         }

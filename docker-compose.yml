@@ -1,11 +1,28 @@
+version: "3.9"
+
 services:
-  playwright-java-demo:
-    hostname: playwright-java-demo
-    container_name: playwright-java-demo
+  app:
+    build: .
+    image: playwright-java-demo:latest
+    container_name: playwright-java-demo-app
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=default
+      - JAVA_OPTS=
+    volumes:
+      - ./screenshots:/workspace/screenshots
+      - ./logs:/workspace/logs
+    # Playwright 官方建议在 Docker 中使用 host 级别的 IPC，避免 Chromium 内存问题
+    ipc: host
+    shm_size: "1g"
+  tests:
+    hostname: playwright-java-demo-tests
+    container_name: playwright-java-demo-tests
     image: mcr.microsoft.com/playwright/java:v1.58.0-jammy
     working_dir: /work
     command: ["bash", "-lc", "mvn -B -ntp test"]
-    shm_size: "1gb"
+    shm_size: "1g"
     environment:
       # 避免某些 CI/容器环境下的交互提示
       CI: "true"

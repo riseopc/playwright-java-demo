@@ -18,7 +18,7 @@
 
 - `pom.xml`：Maven 配置，包含 Playwright、JUnit5 等依赖
 
-## 本地运行
+## 本地运行（直接 Maven）
 
 在项目根目录执行（首次使用建议先确保浏览器已安装）：
 
@@ -38,36 +38,47 @@ mvn -Dplaywright.skipBrowserDownload=false test
 
 Playwright 会自动拉取所需浏览器。
 
-## 基于 Docker 运行（推荐：docker compose）
+## 基于 Docker 运行（docker-compose）
 
-本项目已提供 `docker-compose.yml`，会使用官方 Playwright Java 镜像（包含浏览器依赖），在容器内执行 `mvn test`。
+本项目提供 `Dockerfile` 和 `docker-compose.yml`，用于在容器中运行 Spring Boot 应用和（可选）测试。
 
 前置条件：
 
-- 已安装 Docker Desktop（并启用 Docker Compose）
+- 已安装 Docker / Docker Desktop（包含 docker compose）
+
+### 启动应用（app 服务）
 
 在项目根目录执行：
 
 ```bash
-docker compose down --remove-orphans
-docker compose up --abort-on-container-exit --exit-code-from playwright-java-demo
+docker-compose build app
+docker-compose up app
 ```
 
-执行成功后，你会在项目根目录看到截图文件：
+效果：
 
-- `screenshots/baidu-home.png`
+- 在容器中启动 Spring Boot 应用（Undertow），监听 `8080` 端口；
+- 你可以通过浏览器访问接口：
+  - `http://localhost:8080/api/screenshot?url=https://www.baidu.com`
+- 截图会生成在宿主机项目目录下：
+  - `./screenshots/`（挂载到容器 `/workspace/screenshots`）
+  - 日志输出到 `./logs/`（挂载到容器 `/workspace/logs`）。
 
-### 调整截图清晰度（Viewport / DPR）
+### 运行 Playwright 测试（tests 服务，可选）
 
-截图清晰度主要由浏览器上下文的视口大小（Viewport）和设备像素比（DPR / deviceScaleFactor）决定。
+如果需要在官方 Playwright Java 镜像中运行 `mvn test`，可以执行：
 
-你可以在 `docker-compose.yml` 的 `environment` 中调整：
+```bash
+docker-compose up tests
+```
 
-- `PW_VIEWPORT_WIDTH`（默认 1920）
-- `PW_VIEWPORT_HEIGHT`（默认 1080）
-- `PW_DEVICE_SCALE_FACTOR`（默认 2）
+测试完成后，可以使用：
 
-修改后重新运行 compose 即可生效。
+```bash
+docker-compose down
+```
+
+清理容器。
 
 
 更多 Playwright Java 文档可参考：[Playwright Java 官方文档](https://playwright.dev/java/docs/intro)

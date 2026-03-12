@@ -1,0 +1,15 @@
+### 简单健康检查（可选，如果以后加了健康接口）
+GET http://localhost:8080/actuator/health
+
+### 截图百度首页
+GET http://localhost:8080/api/screenshot?url=https://www.baidu.com
+Accept: application/json
+
+### 截图淘宝首页
+GET http://localhost:8080/api/screenshot?url=https://www.taobao.com
+Accept: application/json
+
+###
+# 如果你在 Docker 容器中运行（端口映射为 8080:8080），
+# 依然使用 http://localhost:8080 即可访问到容器内的服务。
+
